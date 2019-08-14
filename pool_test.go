@@ -12,7 +12,7 @@ func TestPool(t *testing.T) {
 	gopool, err := NewPool(Options{
 		MaxWorkerNums:   10,
 		MinWorkerNums:   3,
-		JobBuffer:   1,
+		JobBuffer:   5,
 		IdleTimeout: 10 * time.Second,
 	})
 	if err != nil {
