@@ -26,7 +26,7 @@ type Options struct {
 	MaxWorkerNums int32
 	MinWorkerNums int32
 	IdleTimeout   time.Duration
-	JobBuffer     int
+	JobBuffer     int // 任务缓冲
 }
 
 type Pool struct {
@@ -48,8 +48,8 @@ func NewPool(option Options) (*Pool, error) {
 	pool := Pool{
 		maxWorkerNums: option.MaxWorkerNums,
 		minWorkerNums: option.MinWorkerNums,
-		idleTimeout: option.IdleTimeout,
-		jobBuffer: option.JobBuffer,
+		idleTimeout:   option.IdleTimeout,
+		jobBuffer:     option.JobBuffer,
 	}
 
 	if pool.maxWorkerNums < pool.minWorkerNums {
@@ -81,7 +81,7 @@ func (p *Pool) addWorker(nums int) {
 			return
 		}
 		atomic.AddInt32(&(p.curWorkerNums), 1)
-		go p.runGoroutine()
+		go p.runGoroutine() // 启动执行的协程
 	}
 }
 
@@ -110,7 +110,7 @@ func (p *Pool) runGoroutine() {
 				continue
 			}
 			return
-		case <-p.ctx.Done():
+		case <-p.ctx.Done(): // 关闭协程池动作
 			if p.curWorkerNums > 0 {
 				atomic.AddInt32(&(p.curWorkerNums), -1)
 			}
